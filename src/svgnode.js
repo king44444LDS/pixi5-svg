@@ -319,7 +319,75 @@ export class SVGNode extends PIXI.Graphics {
 		this.lineStyle(lineWidth, lineColor, strokeOpacityValue);
 		this.setMatrix(matrix);
 	}
+ redrawPath(){
+	  this.clear();
+    //return;
+	  //this.beginFill(0xFFFFFF, 1);
+	  //this.drawCircle(0,0,300);
+	 // return;
 
+    const svgData = this.dataNode;
+
+    const nodeStyle = parseSvgStyle(svgData);
+    const matrix = parseSvgTransform(svgData);
+    const nodeType = svgData.nodeName.toLowerCase();
+
+    let shape = this;
+
+    //const currentFill = this.fill.clone();
+    //currentFill.color = 0xff0000;
+    //compile full style inherited from all parents
+    //const fullStyle =currentFill
+    const fullStyle = Object.assign({}, nodeStyle);//parentStyle || {}, nodeStyle);
+
+    shape.fillShapes(fullStyle, matrix);
+
+    switch (nodeType) {
+      case "path": {
+        shape.svgPath(svgData);
+        break;
+      }
+      case "line": {
+        this.svgLine(svgData);
+        break;
+      }
+      case "circle":
+      case "ellipse": {
+        shape.svgCircle(svgData);
+        break;
+      }
+      case "rect": {
+        shape.svgRect(svgData);
+        break;
+      }
+      case "polygon": {
+        shape.svgPoly(svgData, true);
+        break;
+      }
+      case "polyline": {
+        shape.svgPoly(svgData, false);
+        break;
+      }
+      case "g": {
+        break;
+      }
+      default: {
+        // @if DEBUG
+        console.info("[SVGUtils] <%s> elements unsupported", svgData.nodeName);
+        // @endif
+        break;
+      }
+    }
+
+    const graphicsData = this.geometry.graphicsData;
+    /*
+    this.geometry.updateBatches();
+    this.geometry.cacheDirty = 1;
+    this.geometry.invalidate();
+    this.geometry.cacheDirty();
+
+     */
+  }
 	/**
 	 * Render a <path> d element
 	 * @method SVG#svgPath
