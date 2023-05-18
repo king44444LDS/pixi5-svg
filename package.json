@@ -19,7 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "d-path-parser": "^1.0.0",
-    "pixi.js": "^5.1.1",
+    "pixi.js": "^7.2.4",
     "tinycolor2": "^1.4.1"
   }
 }
